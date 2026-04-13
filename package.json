@@ -11,6 +11,7 @@
     "build": "electron-builder --mac --win"
   },
   "dependencies": {
+    "electron-updater": "^6.8.3",
     "express": "^4.21.0",
     "node-ical": "^0.18.0",
     "sql.js": "^1.11.0"
@@ -24,17 +25,38 @@
     "productName": "Coach Email Generator",
     "mac": {
       "category": "public.app-category.productivity",
-      "target": [{ "target": "dmg", "arch": ["universal"] }]
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        }
+      ]
     },
     "win": {
-      "target": [{ "target": "nsis", "arch": ["x64"] }]
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
     },
-    "asarUnpack": ["node_modules/sql.js/**"],
+    "asarUnpack": [
+      "node_modules/sql.js/**"
+    ],
     "files": [
       "**/*",
       "!coach.db",
       "!.env",
       "!*.md"
-    ]
+    ],
+    "publish": {
+      "provider": "github",
+      "owner": "mikemortensen",
+      "repo": "coach-email-app"
+    }
   }
 }
