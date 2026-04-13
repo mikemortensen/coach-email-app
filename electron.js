@@ -1,0 +1,47 @@
+const { app, BrowserWindow, shell } = require('electron');
+const path = require('path');
+
+let mainWindow;
+
+app.whenReady().then(async () => {
+  // Point the database at the user's writable app-data directory
+  // so it survives app updates and isn't locked inside the bundle.
+  process.env.DB_PATH = path.join(app.getPath('userData'), 'coach.db');
+
+  const { startServer } = require('./server');
+  const port = await startServer();
+
+  mainWindow = new BrowserWindow({
+    width: 1280,
+    height: 900,
+    minWidth: 900,
+    minHeight: 600,
+    title: "Coach's Email Generator",
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true
+    }
+  });
+
+  mainWindow.loadURL(`http://localhost:${port}`);
+
+  // Open external links in the system browser, not inside the app
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: 'deny' };
+  });
+
+  mainWindow.on('closed', () => { mainWindow = null; });
+});
+
+// Keep the app running on macOS when all windows are closed (standard Mac behaviour)
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit();
+});
+
+app.on('activate', () => {
+  if (!mainWindow) {
+    // Re-create the window when the dock icon is clicked and no windows are open
+    app.emit('ready');
+  }
+});

@@ -1,0 +1,40 @@
+{
+  "name": "coach-email-app",
+  "version": "1.0.0",
+  "description": "Weekly email generator for youth soccer coaches",
+  "main": "electron.js",
+  "scripts": {
+    "start": "node server.js",
+    "electron": "electron .",
+    "build:mac": "electron-builder --mac",
+    "build:win": "electron-builder --win",
+    "build": "electron-builder --mac --win"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "node-ical": "^0.18.0",
+    "sql.js": "^1.11.0"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "build": {
+    "appId": "com.coach.email-generator",
+    "productName": "Coach Email Generator",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [{ "target": "dmg", "arch": ["universal"] }]
+    },
+    "win": {
+      "target": [{ "target": "nsis", "arch": ["x64"] }]
+    },
+    "asarUnpack": ["node_modules/sql.js/**"],
+    "files": [
+      "**/*",
+      "!coach.db",
+      "!.env",
+      "!*.md"
+    ]
+  }
+}
